@@ -66,12 +66,22 @@ class DeepNeuralNetwork:
             A, cache = forward(A_prev, parameters["W"+str(layer_num)], parameters["b"+str(layer_num)],"relu")
             caches.append(cache)
             
-        A_last, cache = forward(A, parameters["W"+str(num_layers)], parameters["b"+str(num_layers),"sigmoid")
+        AL, cache = forward(A, parameters["W"+str(num_layers)], parameters["b"+str(num_layers),"sigmoid")
         caches.append(cache)
         
-        return A_last, caches
+        return AL, caches
+        
+    def calculate_cost(self, AL):
+        
+        num_samples = self.y.shape[1]
+        
+        cost = -(1/num_samples) * (np.sum((np.dot(self.Y,np.log(AL.T)))+ (np.dot(1-self.Y,np.log(1-AL.T)))))
+        
+        cost.np.squeeze(cost)
+        
+        return cost
+        
     
-
 X = np.random.rand(10, 100)
 y = np.random.rand(5, 100)
 num_nodes = [50, 30, 20]
