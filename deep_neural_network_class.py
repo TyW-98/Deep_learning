@@ -38,6 +38,22 @@ class DeepNeuralNetwork:
                 
         return parameters
     
+    def forward(A, W, b, activation):
+        
+        Z = np.dot(W,A) + b
+        linear_cache = (A, W, b)
+        
+        if activation.lower() == "sigmoid":
+            A = sigmoid(Z)
+            
+        elif activation.lower() == "relu":
+            A = relu(Z)
+            
+        activation_cache = Z
+        
+        cache = (linear_cache, activation_cache)
+        
+        return A, cache
     
 
 X = np.random.rand(10, 100)
