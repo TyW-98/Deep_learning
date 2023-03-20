@@ -16,6 +16,10 @@ class DeepNeuralNetwork:
     def sigmoid(z):
         return 1/(1+np.exp(-z))
     
+    @staticmethod 
+    def relu(z):
+        return np.maximum(0,z)
+    
     def initialise_weights_bias(self):
         input_shape = self.X.shape[0]
         parameters = {}
@@ -33,6 +37,7 @@ class DeepNeuralNetwork:
                 parameters["b"+str(num_layer+1)] = np.zeros((self.num_nodes[num_layer],1))
                 
         return parameters
+    
     
 
 X = np.random.rand(10, 100)
