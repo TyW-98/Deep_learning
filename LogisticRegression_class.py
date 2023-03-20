@@ -33,7 +33,7 @@ class LogisticRegression:
         
         Z = np.dot(self.w.T,self.X) + self.b
         A = self.sigmoid(Z)
-        cost = -(1/self.m) * (np.sum(np.dot(self.Y,np.log(A.T))) + (np.dot(1-self.Y,np.log(1-A.T))))
+        cost = -(1/self.m) * (np.sum((np.dot(self.Y,np.log(A.T))) + (np.dot(1-self.Y,np.log(1-A.T)))))
         
         return A, cost
         
