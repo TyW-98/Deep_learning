@@ -38,7 +38,7 @@ class DeepNeuralNetwork:
                 
         return parameters
     
-    def forward(A, W, b, activation):
+    def forward(self, A, W, b, activation):
         
         Z = np.dot(W,A) + b
         linear_cache = (A, W, b)
@@ -54,6 +54,22 @@ class DeepNeuralNetwork:
         cache = (linear_cache, activation_cache)
         
         return A, cache
+    
+    def forward_propagation(self, parameters):
+        
+        caches = []
+        A = self.X
+        num_layers = len(parameters) // 2
+        
+        for layer_num in range(1,num_layers):
+            A_prev = A
+            A, cache = forward(A_prev, parameters["W"+str(layer_num)], parameters["b"+str(layer_num)],"relu")
+            caches.append(cache)
+            
+        A_last, cache = forward(A, parameters["W"+str(num_layers)], parameters["b"+str(num_layers),"sigmoid")
+        caches.append(cache)
+        
+        return A_last, caches
     
 
 X = np.random.rand(10, 100)
