@@ -130,10 +130,17 @@ class DeepNeuralNetwork:
             gradients["db"+str(layer+1)] = db_temp
             
         return gradients
+
+    def update_parameters(parameters, gradients):
+        updated_parameters = parameters.copy()
+        num_layers = len(self.num_nodes)
         
+        for layer in range(num_layers):
+            updated_parameters["W"+str(layer+1)] = updated_parameters["W"+str(layer+1)] - np.dot(self.lr,gradients["dW"+str(layer+1)])
+            updated_parameters["b"+str(layer+1)] = updated_parameters["b"+str(layer+1)] - np.dot(self.lr,gradients["db"+str(layer+1)])
         
-        
-        
+    return updated_parameters
+           
     
 X = np.random.rand(10, 100)
 y = np.random.rand(5, 100)
