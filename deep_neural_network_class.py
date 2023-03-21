@@ -109,6 +109,29 @@ class DeepNeuralNetwork:
         
         return dA_prev, dW, db      
         
+    def backpropagation(self, AL, caches):
+        
+        gradients = {}
+        num_layers = len(self.num_nodes)
+        num_samples = self.y.shape[1]
+        self.y = self.y.reshape(AL.shape)
+        
+        dAL = - (np.divide(Y, AL) - np.divide(1 - Y, 1 - AL))
+        
+        current_cache = caches[num_layers-1]
+        
+        dA_prev_temp, dW_temp, db_temp = backward(dAL, current_cache,"sigmoid")
+        
+        for layer in reversed(range(num_layers-1)):
+            current_cache = caches[layer]
+            dA_prev_temp, dW_temp, db_temp = backward(dA_prev_temp, current_cache, "relu")
+            gradients["dA"+str(layer)] = dA_prev_temp
+            gradients["dW"+str(layer+1)] = dW_temp
+            gradients["db"+str(layer+1)] = db_temp
+            
+        return gradients
+        
+        
         
         
     
