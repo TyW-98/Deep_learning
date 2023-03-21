@@ -16,9 +16,20 @@ class DeepNeuralNetwork:
     def sigmoid(z):
         return 1/(1+np.exp(-z))
     
+    def sigmoid_derivative(dA, activation_cache):
+        Z = activation_cache
+        s = 1/ (1+np.exp(-z))
+        dZ = dA * s * (1-s)
+        
+        return dZ
+    
     @staticmethod 
     def relu(z):
         return np.maximum(0,z)
+    
+    def relu_derivative(dA, activation_cache):
+        dZ = np.array(dA, copy= True)
+        dZ[activation_cache <= 0] = 0
     
     def initialise_weights_bias(self):
         input_shape = self.X.shape[0]
@@ -80,6 +91,25 @@ class DeepNeuralNetwork:
         cost.np.squeeze(cost)
         
         return cost
+        
+    def backward(self, dA, cache, activation):
+        
+        linear_cache, activation_cache = cache
+        A_prev, W, b = linear_cache
+        num_samples = self.y.shape[1]
+        
+        if activation == "relu":
+            dZ = relu_derivative(dA, activation_cache)
+        elif activation == "sigmoid":
+            dZ = sigmoid_derivative(dA, activation_cache)
+            
+        dW = (1/num_sampples) * np.dot(dZ,A_prev.T)
+        db = (1/num_sampples) * np.sum(dZ, axis = 1, keepdims = True)
+        dA_prev = np.dot(W.T,dZ)      
+        
+        return dA_prev, dW, db      
+        
+        
         
     
 X = np.random.rand(10, 100)
