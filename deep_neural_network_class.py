@@ -55,10 +55,10 @@ class DeepNeuralNetwork:
         linear_cache = (A, W, b)
         
         if activation.lower() == "sigmoid":
-            A = sigmoid(Z)
+            A = self.sigmoid(Z)
             
         elif activation.lower() == "relu":
-            A = relu(Z)
+            A = self.relu(Z)
             
         activation_cache = Z
         
@@ -74,10 +74,10 @@ class DeepNeuralNetwork:
         
         for layer_num in range(1,num_layers):
             A_prev = A
-            A, cache = forward(A_prev, parameters["W"+str(layer_num)], parameters["b"+str(layer_num)],"relu")
+            A, cache = self.forward(A_prev, parameters["W"+str(layer_num)], parameters["b"+str(layer_num)],"relu")
             caches.append(cache)
             
-        AL, cache = forward(A, parameters["W"+str(num_layers)], parameters["b"+str(num_layers),"sigmoid")
+        AL, cache = self.forward(A, parameters["W"+str(num_layers)], parameters["b"+str(num_layers)],"sigmoid")
         caches.append(cache)
         
         return AL, caches
@@ -99,12 +99,12 @@ class DeepNeuralNetwork:
         num_samples = self.y.shape[1]
         
         if activation == "relu":
-            dZ = relu_derivative(dA, activation_cache)
+            dZ = self.relu_derivative(dA, activation_cache)
         elif activation == "sigmoid":
-            dZ = sigmoid_derivative(dA, activation_cache)
+            dZ = self.sigmoid_derivative(dA, activation_cache)
             
-        dW = (1/num_sampples) * np.dot(dZ,A_prev.T)
-        db = (1/num_sampples) * np.sum(dZ, axis = 1, keepdims = True)
+        dW = (1/num_samples) * np.dot(dZ,A_prev.T)
+        db = (1/num_samples) * np.sum(dZ, axis = 1, keepdims = True)
         dA_prev = np.dot(W.T,dZ)      
         
         return dA_prev, dW, db      
@@ -120,26 +120,27 @@ class DeepNeuralNetwork:
         
         current_cache = caches[num_layers-1]
         
-        dA_prev_temp, dW_temp, db_temp = backward(dAL, current_cache,"sigmoid")
+        dA_prev_temp, dW_temp, db_temp = self.backward(dAL, current_cache,"sigmoid")
         
         for layer in reversed(range(num_layers-1)):
             current_cache = caches[layer]
-            dA_prev_temp, dW_temp, db_temp = backward(dA_prev_temp, current_cache, "relu")
+            dA_prev_temp, dW_temp, db_temp = self.backward(dA_prev_temp, current_cache, "relu")
             gradients["dA"+str(layer)] = dA_prev_temp
             gradients["dW"+str(layer+1)] = dW_temp
             gradients["db"+str(layer+1)] = db_temp
             
         return gradients
 
-    def update_parameters(parameters, gradients):
+    def update_parameters(self, parameters, gradients):
         updated_parameters = parameters.copy()
         num_layers = len(self.num_nodes)
         
         for layer in range(num_layers):
             updated_parameters["W"+str(layer+1)] = updated_parameters["W"+str(layer+1)] - np.dot(self.lr,gradients["dW"+str(layer+1)])
             updated_parameters["b"+str(layer+1)] = updated_parameters["b"+str(layer+1)] - np.dot(self.lr,gradients["db"+str(layer+1)])
-        
-    return updated_parameters
+            
+        return updated_parameters
+    
            
     
 X = np.random.rand(10, 100)
