@@ -93,13 +93,3 @@ class LogisticRegression:
     
     def print_accuracy(self,Y_pred,Y):
         print("Accuracy: {}%" .format(100 - np.mean(np.abs(Y_pred - Y)) * 100))
-            
-
-if __name__ == '__main__':
-    working_dir = os.path.dirname(os.path.realpath(__file__))
-    image_dir = os.path.join(working_dir,"data/images/image_classification")
-
-    x_train, x_test, y_train, y_test= prepare_image_data(image_dir)
-    model = LogisticRegression(x_train, y_train ,num_iterations = 200)
-    test_prediction = model.predict(x_test,y_test)
-        
