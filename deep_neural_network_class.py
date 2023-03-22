@@ -12,6 +12,8 @@ class DeepNeuralNetwork:
         self.num_iterations = num_iterations
         self.lr = lr
         
+        self.parameters, cost = self.training_loop()
+        
     @staticmethod    
     def sigmoid(z):
         return 1/(1+np.exp(-z))
@@ -141,11 +143,25 @@ class DeepNeuralNetwork:
             
         return updated_parameters
     
-           
+    def training_loop(self):
+        
+        input_size = self.X.shape[0]
+        output_size = self.y.shape[0]
+        
+        parameters = self.initialise_weights_bias()
+        
+        for itr in range(0, self.num_iterations):
+            AL, caches = self.forward_propagations(parameters)
+            cost = self.calculate_cost(AL)
+            gradients = self.backpropagation(AL,caches)
+            parameters = self.update_parameters(parameters,gradients)
+            
+        return parameters, cost
     
-X = np.random.rand(10, 100)
-y = np.random.rand(5, 100)
-num_nodes = [50, 30, 20]
-model = DeepNeuralNetwork(X,y,num_nodes)
-
-print(model.initialise_weights_bias().keys())
+    def predict(self, X):
+        AL, cache = self.forward_propagation(X, self.parameters)
+        y_pred = (AL > 0.5)
+        
+        return y_pred
+    
+    
